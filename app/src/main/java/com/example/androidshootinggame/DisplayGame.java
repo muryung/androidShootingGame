@@ -20,9 +20,11 @@ public class DisplayGame extends View implements Runnable{
 
     private Thread thread = new Thread(this);
 
+    private int loopInteval = 10;
+
     Player player;
     JoyStickView joyStickView;
-
+    Context context;
 
     public DisplayGame(Context context) {
         super(context);
@@ -31,23 +33,58 @@ public class DisplayGame extends View implements Runnable{
 
     public DisplayGame(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
-        thread.start();
+        this.context = context;
         player = new Player(context);
-        joyStickView = new JoyStickView(context, attrs);
+
+        thread.start();
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
         player.PlayerDraw(canvas);
-        joyStickView.JoyStickDraw(canvas);
+
+        if (joyStickView != null)
+            joyStickView.JoyStickDraw(canvas);
+    }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        int touchX = (int) event.getX();
+        int touchY = (int) event.getY();
+
+        switch (event.getAction()) {
+            // 터치했을 때 1회
+            case MotionEvent.ACTION_DOWN:
+                joyStickView = new JoyStickView(context, touchX, touchY);
+                break;
+
+            // 터치하고 움직일 때
+            case MotionEvent.ACTION_MOVE:
+                joyStickView.joyStickPosX = touchX;
+                joyStickView.joyStickPosY = touchY;
+                joyStickView.keepStickOutCircle();
+                break;
+
+            // 손 땔 떄
+            case MotionEvent.ACTION_UP:
+                joyStickView = null;
+                break;
+
+            default:
+                break;
+        }
+        return true;
     }
 
     @Override
     public void run() {
         while (!Thread.interrupted()) {
-            invalidate();
+            post(() -> {
+                player.PlayerMove(joyStickView, this.getWidth(), this.getHeight());
+                invalidate();
+            });
             try {
-                Thread.sleep(10);
+                Thread.sleep(loopInteval);
             } catch (InterruptedException e) {
                 break;
             }
