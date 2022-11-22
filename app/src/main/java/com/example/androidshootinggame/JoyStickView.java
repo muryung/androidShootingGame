@@ -4,7 +4,10 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.util.AttributeSet;
 import android.view.View;
+
+import androidx.annotation.Nullable;
 
 public class JoyStickView extends View{
 
@@ -23,8 +26,8 @@ public class JoyStickView extends View{
     Bitmap joyStickBgImg = BitmapFactory.decodeResource(getResources(), R.drawable.joysticksplitted);
     Bitmap joyStickImg = BitmapFactory.decodeResource(getResources(), R.drawable.smallhandlefilled);
 
-    public JoyStickView(Context context, int touchX, int touchY) {
-        super(context);
+    public JoyStickView(Context context, @Nullable AttributeSet attrs, int touchX, int touchY) {
+        super(context, attrs);
         this.touchX = touchX;
         this.touchY = touchY;
     }

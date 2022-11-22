@@ -1,43 +1,41 @@
 package com.example.androidshootinggame;
 
+import static java.lang.Thread.sleep;
+
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
-import android.graphics.Paint;
-import android.os.Looper;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 
 import androidx.annotation.Nullable;
-import androidx.constraintlayout.widget.ConstraintLayout;
+import java.util.ArrayList;
 
-import java.util.logging.Handler;
-import java.util.logging.LogRecord;
-
-public class DisplayGame extends View implements Runnable{
-
-    private Thread thread = new Thread(this);
+public class DisplayGame extends View{
 
     private int loopInteval = 10;
 
     Player player;
     JoyStickView joyStickView;
+    Bullet bullet;
+
     Context context;
+    AttributeSet attrs;
 
     public DisplayGame(Context context) {
         super(context);
-
     }
 
     public DisplayGame(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
         this.context = context;
+        this.attrs = attrs;
         player = new Player(context);
+        bullet = new Bullet(context);
 
         thread.start();
     }
+
 
     @Override
     protected void onDraw(Canvas canvas) {
@@ -45,6 +43,10 @@ public class DisplayGame extends View implements Runnable{
 
         if (joyStickView != null)
             joyStickView.JoyStickDraw(canvas);
+
+        if (bullet != null)
+            bullet.drawBullet(canvas);
+
     }
 
     @Override
@@ -55,7 +57,7 @@ public class DisplayGame extends View implements Runnable{
         switch (event.getAction()) {
             // 터치했을 때 1회
             case MotionEvent.ACTION_DOWN:
-                joyStickView = new JoyStickView(context, touchX, touchY);
+                joyStickView = new JoyStickView(context, attrs, touchX, touchY);
                 break;
 
             // 터치하고 움직일 때
@@ -76,19 +78,24 @@ public class DisplayGame extends View implements Runnable{
         return true;
     }
 
-    @Override
-    public void run() {
-        while (!Thread.interrupted()) {
-            post(() -> {
-                player.PlayerMove(joyStickView, this.getWidth(), this.getHeight());
+
+
+    private Thread thread = new Thread(new Runnable() {
+        @Override
+        public void run() {
+            while (!Thread.interrupted())
+            {
+                player.PlayerMove(joyStickView, getWidth(), getHeight());
+                bullet.instanceBullet(context);
                 invalidate();
-            });
-            try {
-                Thread.sleep(loopInteval);
-            } catch (InterruptedException e) {
-                break;
+                try {
+                    Thread.sleep(loopInteval);
+                } catch (InterruptedException e)
+                {
+                    break;
+                }
             }
         }
+    });
 
-    }
 }

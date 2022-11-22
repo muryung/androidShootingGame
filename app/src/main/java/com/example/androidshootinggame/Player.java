@@ -14,8 +14,8 @@ public class Player extends View {
 
     Bitmap airPlaneImg = BitmapFactory.decodeResource(getResources(), R.drawable.airplane);
 
-    private int playerX = 300;
-    private int playerY = 1200;
+    public static int playerX = 300;
+    public static int playerY = 1200;
 
     final int playerSpeed = 5;
 
@@ -25,7 +25,6 @@ public class Player extends View {
 
     public Player(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
-
     }
 
     public void PlayerDraw(Canvas canvas)
@@ -38,7 +37,6 @@ public class Player extends View {
     {
         if (joyStickView != null)
         {
-            System.out.println(viewWidth);
             playerX += Math.cos(Math.toRadians(joyStickView.getAngle())) * playerSpeed;
             playerY -= Math.sin(Math.toRadians(joyStickView.getAngle())) * playerSpeed;
             if (playerX < -100)
