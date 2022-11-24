@@ -4,23 +4,29 @@ import static java.lang.Thread.sleep;
 
 import android.content.Context;
 import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.TextView;
 
 import androidx.annotation.Nullable;
-import java.util.ArrayList;
+
+import org.w3c.dom.Text;
 
 public class DisplayGame extends View{
-
     private int loopInteval = 10;
 
     Player player;
     JoyStickView joyStickView;
     Bullet bullet;
+    Enemy enemy;
+    ContectObject contect;
 
     Context context;
     AttributeSet attrs;
+    AllText allText;
 
     public DisplayGame(Context context) {
         super(context);
@@ -32,10 +38,12 @@ public class DisplayGame extends View{
         this.attrs = attrs;
         player = new Player(context);
         bullet = new Bullet(context);
+        enemy = new Enemy(context);
+        allText = new AllText(context);
+        contect = new ContectObject();
 
         thread.start();
     }
-
 
     @Override
     protected void onDraw(Canvas canvas) {
@@ -46,6 +54,12 @@ public class DisplayGame extends View{
 
         if (bullet != null)
             bullet.drawBullet(canvas);
+
+        if (enemy != null)
+            enemy.drawEnemy(canvas);
+
+        if (allText != null)
+            allText.drawRemainEnemyText(canvas);
 
     }
 
@@ -78,8 +92,6 @@ public class DisplayGame extends View{
         return true;
     }
 
-
-
     private Thread thread = new Thread(new Runnable() {
         @Override
         public void run() {
@@ -87,6 +99,8 @@ public class DisplayGame extends View{
             {
                 player.PlayerMove(joyStickView, getWidth(), getHeight());
                 bullet.instanceBullet(context);
+                enemy.instanceEnemy(context);
+                contect.enemyContectBullet(enemy.enemys, bullet.bullets, player);
                 invalidate();
                 try {
                     Thread.sleep(loopInteval);

@@ -83,8 +83,13 @@ public class JoyStickView extends View{
     {
         initPosition();
         initRadius(joyStickBgImg.getWidth(), joyStickBgImg.getHeight());
-        canvas.drawBitmap(joyStickBgImg, touchX - joyStickBgImg.getWidth() / 2 + joyStickImg.getWidth() / 2, touchY - joyStickBgImg.getHeight() / 2 + joyStickImg.getHeight() / 2, null);
-        canvas.drawBitmap(joyStickImg, joyStickPosX, joyStickPosY,null);
+
+        if (joyStickPosX != 0 && joyStickPosY != 0)
+        {
+            canvas.drawBitmap(joyStickBgImg, touchX - joyStickBgImg.getWidth() / 2 + joyStickImg.getWidth() / 2, touchY - joyStickBgImg.getHeight() / 2 + joyStickImg.getHeight() / 2, null);
+            canvas.drawBitmap(joyStickImg, joyStickPosX, joyStickPosY,null);
+        }
+
 
     }
 

@@ -4,6 +4,9 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.Rect;
 import android.util.AttributeSet;
 import android.view.View;
 
@@ -14,10 +17,14 @@ import java.util.ArrayList;
 public class Bullet extends View {
     Bitmap bulletImg = BitmapFactory.decodeResource(getResources(), R.drawable.bullet);
 
-    ArrayList<Bullet> bullets = new ArrayList<>();
+    public ArrayList<Bullet> bullets = new ArrayList<>();
 
-    float bulletX, bulletY;
-    float bulletSpeed = 30f;        // 총알의 속도
+    int bulletX, bulletY;
+    int bulletSpeed = 30;        // 총알의 속도
+
+    int bulletWidth = bulletImg.getWidth();
+    int bulletHeight = bulletImg.getHeight();
+
 
     public Bullet(Context context) {
         super(context);
@@ -28,10 +35,6 @@ public class Bullet extends View {
     public Bullet(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
 
-    }
-
-    public void fire() {
-        bulletY -= bulletSpeed;
     }
 
     long nextFire = 0;
@@ -47,18 +50,29 @@ public class Bullet extends View {
 
     }
 
+
     public void drawBullet(Canvas canvas) {
         for (int i = 0; i < bullets.size(); i++) {
             Bullet tmpBullet = bullets.get(i);
+
             if (tmpBullet != null) {
                 canvas.drawBitmap(tmpBullet.bulletImg, tmpBullet.bulletX, tmpBullet.bulletY, null);
-                tmpBullet.fire();
 
-                if (tmpBullet.bulletY < 0) {
-                    bullets.remove(i);
-                }
+                tmpBullet.fire();
+                removeBulletOutDisplay(tmpBullet, i);
             }
         }
+    }
+
+    private void removeBulletOutDisplay(Bullet bullet, int i)
+    {
+        if (bullet.bulletY < 0) {
+            bullets.remove(i);
+        }
+    }
+
+    private void fire() {
+        bulletY -= bulletSpeed;
     }
 }
 

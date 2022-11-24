@@ -18,6 +18,7 @@ public class Player extends View {
     public static int playerY = 1200;
 
     final int playerSpeed = 5;
+    final float playerAttack = 50f;
 
     public Player(Context context) {
         super(context);
