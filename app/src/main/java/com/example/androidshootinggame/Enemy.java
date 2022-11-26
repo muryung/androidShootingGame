@@ -5,10 +5,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
 import android.graphics.Point;
-import android.graphics.Rect;
 import android.util.AttributeSet;
 import android.view.Display;
 import android.view.View;
@@ -17,74 +14,43 @@ import androidx.annotation.Nullable;
 
 import java.util.ArrayList;
 
-public class Enemy extends View{
-    Bitmap enemyImg = BitmapFactory.decodeResource(getResources(), R.drawable.enemy1);
+public abstract class Enemy extends View {
 
     Display display =  ((Activity) getContext()).getWindowManager().getDefaultDisplay();
     Point displaySize = new Point();
 
-    public ArrayList<Enemy> enemys = new ArrayList<>();
-    public Hp hp;
+    public ArrayList<FirstEnemy> enemyArray = new ArrayList<>();
+    public Context context;
 
-    public static final float enemyMaxHp = 100f;
-    public float enemyCurrentHp = enemyMaxHp;
-    int enemySpeed = 5;
+    float enemyMaxHp = 100f;
+    float enemyCurrentHp = enemyMaxHp;
 
-    int enemyWidth = enemyImg.getWidth();
-    int enemyHeight = enemyImg.getHeight();
-    int enemyX = 0;
-    int enemyY = 0;
+    int enemySpeed;
+    int enemyWidth;
+    int enemyHeight;
+    int enemyX;
+    int enemyY;
 
     public Enemy(Context context) {
         super(context);
-        hp = new Hp(context);
+        this.context = context;
         display.getRealSize(displaySize);
-        enemyX = (int) (Math.random() * displaySize.x);
     }
 
     public Enemy(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
     }
 
-    long nextEnemy = 0;
-    long enemyRecoilTime = 1000;      // 적 생성 속도
+    abstract public void drawEnemy(Canvas canvas);
 
-    public void instanceEnemy(Context context) {
-        if (System.currentTimeMillis() > nextEnemy)
-        {
-            nextEnemy = System.currentTimeMillis() + enemyRecoilTime;
-            Enemy enemy = new Enemy(context);
-            enemys.add(enemy);
-        }
+    abstract public void setHpBar(FirstEnemy hitedEnemy);
 
-    }
+    abstract  public void move();
 
-    public void drawEnemy(Canvas canvas) {
-        for (int i = 0; i < enemys.size(); i++) {
-            Enemy tmpEnemy = enemys.get(i);
-
-            if (tmpEnemy != null) {
-                if (ContectObject.isAttacked)
-                    hp.drawHpBar(canvas, tmpEnemy);
-
-                canvas.drawBitmap(tmpEnemy.enemyImg, tmpEnemy.enemyX, tmpEnemy.enemyY, null);
-                tmpEnemy.move();
-
-                removeEnemyOutDisplay(tmpEnemy, i);
-            }
-        }
-    }
-
-
-    private void removeEnemyOutDisplay(Enemy enemy, int i)
-    {
+    public void removeEnemyOutDisplay(FirstEnemy enemy) {
         if (enemy.enemyY > displaySize.y) {
-            enemys.remove(i);
+            enemyArray.remove(enemy);
         }
-    }
-
-    private void move() {
-        enemyY += enemySpeed;
     }
 
 }

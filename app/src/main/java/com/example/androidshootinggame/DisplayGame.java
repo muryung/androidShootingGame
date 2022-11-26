@@ -4,16 +4,11 @@ import static java.lang.Thread.sleep;
 
 import android.content.Context;
 import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.TextView;
 
 import androidx.annotation.Nullable;
-
-import org.w3c.dom.Text;
 
 public class DisplayGame extends View{
     private int loopInteval = 10;
@@ -21,7 +16,7 @@ public class DisplayGame extends View{
     Player player;
     JoyStickView joyStickView;
     Bullet bullet;
-    Enemy enemy;
+    FirstEnemy firstEnemy;
     ContectObject contect;
 
     Context context;
@@ -38,7 +33,7 @@ public class DisplayGame extends View{
         this.attrs = attrs;
         player = new Player(context);
         bullet = new Bullet(context);
-        enemy = new Enemy(context);
+        firstEnemy = new FirstEnemy(context);
         allText = new AllText(context);
         contect = new ContectObject();
 
@@ -55,8 +50,8 @@ public class DisplayGame extends View{
         if (bullet != null)
             bullet.drawBullet(canvas);
 
-        if (enemy != null)
-            enemy.drawEnemy(canvas);
+        if (firstEnemy != null)
+            firstEnemy.drawEnemy(canvas);
 
         if (allText != null)
             allText.drawRemainEnemyText(canvas);
@@ -99,8 +94,8 @@ public class DisplayGame extends View{
             {
                 player.PlayerMove(joyStickView, getWidth(), getHeight());
                 bullet.instanceBullet(context);
-                enemy.instanceEnemy(context);
-                contect.enemyContectBullet(enemy.enemys, bullet.bullets, player);
+                firstEnemy.instanceEnemy();
+                contect.enemyContectBullet(firstEnemy, bullet.bullets, player);
                 invalidate();
                 try {
                     Thread.sleep(loopInteval);
