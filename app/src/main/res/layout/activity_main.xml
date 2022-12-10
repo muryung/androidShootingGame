@@ -1,20 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/mainLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:fontFamily="@font/pfstardust"
     tools:context=".MainActivity">
 
-
-    <com.example.androidshootinggame.DisplayGame
+    <ViewFlipper
+        android:id="@+id/vFliper"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0" />
+        app:layout_constraintTop_toTopOf="parent">
+
+        <com.example.androidshootinggame.screen.IntroScreen
+            android:id="@+id/introScreen"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"></com.example.androidshootinggame.screen.IntroScreen>
+
+        <com.example.androidshootinggame.screen.InGameScreen
+            android:id="@+id/gameScreen"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"></com.example.androidshootinggame.screen.InGameScreen>
+
+        <com.example.androidshootinggame.screen.HelpScreen
+            android:id="@+id/rankScreen"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"></com.example.androidshootinggame.screen.HelpScreen>
+
+        <com.example.androidshootinggame.screen.LosingScreen
+            android:id="@+id/losingScreen"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"></com.example.androidshootinggame.screen.LosingScreen>
+    </ViewFlipper>
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>
